@@ -18,6 +18,6 @@ public class LoginController {
 
     @GetMapping("/")
     public String home() {
-        return "redirect:/dashboard";
+        return "redirect:/login";
     }
 }

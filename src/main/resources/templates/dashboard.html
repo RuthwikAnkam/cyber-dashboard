@@ -1,180 +1,58 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyber Attack Monitor Dashboard</title>
-    <!-- Bootstrap CSS -->
+    <title>Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background-color: #0a0c0f;
-            color: #e0e0e0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .navbar {
-            background: linear-gradient(45deg, #8b0000, #b22222);
-            padding: 1rem;
-        }
-        .stat-card {
-            background: #1a1e24;
-            border-radius: 15px;
-            padding: 25px;
-            margin: 10px 0;
-            border-left: 5px solid;
-            transition: transform 0.3s;
-        }
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-        .stat-icon {
-            font-size: 2.5rem;
-            opacity: 0.8;
-        }
-        .threat-table {
-            background: #1a1e24;
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-        .badge-critical { background: #dc3545; }
-        .badge-high { background: #fd7e14; }
-        .badge-medium { background: #ffc107; color: #000; }
-        .badge-low { background: #0dcaf0; color: #000; }
-    </style>
 </head>
-<body>
-<!-- Navigation -->
-<nav class="navbar navbar-dark">
-    <div class="container-fluid">
-            <span class="navbar-brand">
-                <i class="fas fa-shield-alt me-2"></i>
-                <strong>Cyber Attack Monitoring Dashboard</strong>
-            </span>
-        <div class="text-white">
-            <i class="fas fa-user-circle me-2"></i>
-            <span th:text="${username}">Security Analyst</span>
-            <a href="/logout" class="btn btn-outline-light btn-sm ms-3">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </a>
-        </div>
+<body class="bg-dark text-white">
+<nav class="navbar bg-danger">
+    <div class="container">
+        <span>🛡️ Cyber Attack Monitor</span>
+        <a href="/logout" class="btn btn-light btn-sm">Logout</a>
     </div>
 </nav>
 
-<!-- Main Content -->
-<div class="container-fluid mt-4 px-4">
-    <!-- Stats Cards -->
+<div class="container mt-4">
     <div class="row">
         <div class="col-md-3">
-            <div class="stat-card" style="border-left-color: #dc3545;">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="text-secondary mb-2">TOTAL THREATS</h6>
-                        <h2 class="display-6 text-danger" th:text="${totalThreats}">157</h2>
-                    </div>
-                    <i class="fas fa-exclamation-triangle stat-icon text-danger"></i>
-                </div>
+            <div class="card bg-secondary p-3">
+                <h6>Total Threats</h6>
+                <h2 id="total">0</h2>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="stat-card" style="border-left-color: #ffc107;">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="text-secondary mb-2">ACTIVE THREATS</h6>
-                        <h2 class="display-6 text-warning" th:text="${activeThreats}">23</h2>
-                    </div>
-                    <i class="fas fa-bolt stat-icon text-warning"></i>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card" style="border-left-color: #28a745;">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="text-secondary mb-2">BLOCKED</h6>
-                        <h2 class="display-6 text-success" th:text="${blockedThreats}">134</h2>
-                    </div>
-                    <i class="fas fa-shield-halved stat-icon text-success"></i>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card" style="border-left-color: #0dcaf0;">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="text-secondary mb-2">SYSTEMS ONLINE</h6>
-                        <h2 class="display-6 text-info" th:text="${systemsOnline}">12</h2>
-                    </div>
-                    <i class="fas fa-server stat-icon text-info"></i>
-                </div>
+            <div class="card bg-warning p-3">
+                <h6>Active Threats</h6>
+                <h2 id="active">0</h2>
             </div>
         </div>
     </div>
 
-    <!-- Recent Threats Table -->
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="threat-table">
-                <h5 class="mb-3">
-                    <i class="fas fa-list me-2 text-danger"></i>
-                    Recent Threats
-                </h5>
-                <table class="table table-dark table-hover">
-                    <thead>
-                    <tr>
-                        <th>Time</th>
-                        <th>Type</th>
-                        <th>Source IP</th>
-                        <th>Target</th>
-                        <th>Severity</th>
-                        <th>Status</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>14:32:15</td>
-                        <td>DDoS Attack</td>
-                        <td>192.168.1.105</td>
-                        <td>Web Server</td>
-                        <td><span class="badge bg-danger">Critical</span></td>
-                        <td><span class="badge bg-success">Blocked</span></td>
-                    </tr>
-                    <tr>
-                        <td>14:28:03</td>
-                        <td>Malware</td>
-                        <td>10.0.0.45</td>
-                        <td>Database</td>
-                        <td><span class="badge bg-warning">High</span></td>
-                        <td><span class="badge bg-warning">Investigating</span></td>
-                    </tr>
-                    <tr>
-                        <td>14:15:47</td>
-                        <td>Phishing</td>
-                        <td>172.16.1.89</td>
-                        <td>Mail Server</td>
-                        <td><span class="badge bg-info">Medium</span></td>
-                        <td><span class="badge bg-primary">Detected</span></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- Success Message -->
-    <div class="row mt-3">
-        <div class="col-12">
-            <div class="alert alert-success">
-                <i class="fas fa-check-circle me-2"></i>
-                Successfully logged in! Your dashboard is now working.
-            </div>
-        </div>
-    </div>
+    <table class="table table-dark mt-4">
+        <thead>
+        <tr><th>Type</th><th>Severity</th><th>Source IP</th><th>Status</th></tr>
+        </thead>
+        <tbody id="tableBody">
+        <tr><td colspan="4">Loading...</td></tr>
+        </tbody>
+    </table>
 </div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    fetch('/api/threats')
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('total').innerText = data.length;
+            document.getElementById('active').innerText = data.filter(t => t.status !== 'Blocked').length;
+            document.getElementById('tableBody').innerHTML = data.map(t => `
+                <tr>
+                    <td>${t.type}</td>
+                    <td>${t.severity}</td>
+                    <td>${t.sourceIp}</td>
+                    <td>${t.status}</td>
+                </tr>
+            `).join('');
+        });
+</script>
 </body>
 </html>
