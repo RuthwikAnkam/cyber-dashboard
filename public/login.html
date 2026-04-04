@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Login - Cyber Dashboard</title>
@@ -29,20 +29,6 @@
             color: #333;
             font-weight: 600;
         }
-        .login-header p {
-            color: #666;
-            font-size: 14px;
-        }
-        .form-control {
-            height: 45px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            padding: 10px 15px;
-        }
-        .form-control:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102,126,234,0.25);
-        }
         .btn-login {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border: none;
@@ -68,18 +54,6 @@
             margin-top: 20px;
             border: 1px solid #dee2e6;
         }
-        .credentials-box p {
-            margin-bottom: 5px;
-            color: #495057;
-            font-size: 13px;
-        }
-        .credentials-box .badge {
-            background: #28a745;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 12px;
-        }
     </style>
 </head>
 <body>
@@ -89,20 +63,12 @@
         <p>Please sign in to access the dashboard</p>
     </div>
 
-    <!-- Error message -->
-    <div th:if="${param.error}" class="alert alert-danger">
-        <i class="fas fa-exclamation-circle"></i>
+    <div id="errorMessage" class="alert alert-danger" style="display: none;">
         Invalid username or password
     </div>
 
-    <!-- Logout message -->
-    <div th:if="${param.logout}" class="alert alert-success">
-        <i class="fas fa-check-circle"></i>
-        You have been logged out
-    </div>
-
-    <!-- Login Form -->
-    <form method="post" th:action="@{/login}">
+    <!-- Login Form - UPDATE THIS URL -->
+    <form id="loginForm">
         <div class="mb-3">
             <label for="username" class="form-label">Username</label>
             <input type="text" id="username" name="username" class="form-control"
@@ -118,17 +84,51 @@
         </button>
     </form>
 
-    <!-- Test Credentials -->
     <div class="credentials-box">
         <p><strong>Test Credentials:</strong></p>
-        <p><span class="badge">Admin</span> Username: <code>admin</code> | Password: <code>admin123</code></p>
-        <p><span class="badge">Analyst</span> Username: <code>analyst</code> | Password: <code>analyst123</code></p>
+        <p>Username: <code>admin</code> | Password: <code>admin123</code></p>
+        <p>Username: <code>analyst</code> | Password: <code>analyst123</code></p>
     </div>
 </div>
 
-<!-- Font Awesome for icons -->
-<script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
-<!-- If Font Awesome doesn't load, use this alternative -->
+<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<script>
+    // UPDATE THIS URL TO YOUR RENDER BACKEND
+    const BACKEND_URL = 'https://cyber-dashboard-jwz2.onrender.com';
+
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const errorDiv = document.getElementById('errorMessage');
+
+        try {
+            const response = await fetch(`${BACKEND_URL}/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    'username': username,
+                    'password': password
+                })
+            });
+
+            if (response.ok) {
+                // Login successful - redirect to dashboard
+                window.location.href = `${BACKEND_URL}/dashboard`;
+            } else {
+                // Login failed
+                errorDiv.style.display = 'block';
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            errorDiv.style.display = 'block';
+        }
+    });
+</script>
 </body>
 </html>

@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cyber Attack Monitor Dashboard</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
@@ -25,9 +23,11 @@
             margin: 10px 0;
             border-left: 5px solid;
             transition: transform 0.3s;
+            cursor: pointer;
         }
         .stat-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
         }
         .stat-icon {
             font-size: 2.5rem;
@@ -43,6 +43,16 @@
         .badge-high { background: #fd7e14; }
         .badge-medium { background: #ffc107; color: #000; }
         .badge-low { background: #0dcaf0; color: #000; }
+        .severity-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+        }
     </style>
 </head>
 <body>
@@ -55,10 +65,10 @@
             </span>
         <div class="text-white">
             <i class="fas fa-user-circle me-2"></i>
-            <span th:text="${username}">Security Analyst</span>
-            <a href="/logout" class="btn btn-outline-light btn-sm ms-3">
+            <span id="username">Security Analyst</span>
+            <button onclick="logout()" class="btn btn-outline-light btn-sm ms-3">
                 <i class="fas fa-sign-out-alt"></i> Logout
-            </a>
+            </button>
         </div>
     </div>
 </nav>
@@ -66,13 +76,14 @@
 <!-- Main Content -->
 <div class="container-fluid mt-4 px-4">
     <!-- Stats Cards -->
-    <div class="row">
+    <div class="row" id="statsRow">
         <div class="col-md-3">
             <div class="stat-card" style="border-left-color: #dc3545;">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h6 class="text-secondary mb-2">TOTAL THREATS</h6>
-                        <h2 class="display-6 text-danger" th:text="${totalThreats}">157</h2>
+                        <h2 class="display-6 text-danger" id="totalThreats">0</h2>
+                        <span class="text-secondary">Last 24 hours</span>
                     </div>
                     <i class="fas fa-exclamation-triangle stat-icon text-danger"></i>
                 </div>
@@ -83,7 +94,8 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h6 class="text-secondary mb-2">ACTIVE THREATS</h6>
-                        <h2 class="display-6 text-warning" th:text="${activeThreats}">23</h2>
+                        <h2 class="display-6 text-warning" id="activeThreats">0</h2>
+                        <span class="text-secondary">Needs attention</span>
                     </div>
                     <i class="fas fa-bolt stat-icon text-warning"></i>
                 </div>
@@ -94,7 +106,8 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h6 class="text-secondary mb-2">BLOCKED</h6>
-                        <h2 class="display-6 text-success" th:text="${blockedThreats}">134</h2>
+                        <h2 class="display-6 text-success" id="blockedThreats">0</h2>
+                        <span class="text-secondary">Successfully blocked</span>
                     </div>
                     <i class="fas fa-shield-halved stat-icon text-success"></i>
                 </div>
@@ -105,7 +118,8 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h6 class="text-secondary mb-2">SYSTEMS ONLINE</h6>
-                        <h2 class="display-6 text-info" th:text="${systemsOnline}">12</h2>
+                        <h2 class="display-6 text-info" id="systemsOnline">12</h2>
+                        <span class="text-secondary">All systems operational</span>
                     </div>
                     <i class="fas fa-server stat-icon text-info"></i>
                 </div>
@@ -113,68 +127,126 @@
         </div>
     </div>
 
-    <!-- Recent Threats Table -->
+    <!-- Charts Section -->
     <div class="row mt-4">
-        <div class="col-12">
+        <div class="col-md-12">
             <div class="threat-table">
                 <h5 class="mb-3">
                     <i class="fas fa-list me-2 text-danger"></i>
-                    Recent Threats
+                    Recent Threat Activity
                 </h5>
-                <table class="table table-dark table-hover">
-                    <thead>
-                    <tr>
-                        <th>Time</th>
-                        <th>Type</th>
-                        <th>Source IP</th>
-                        <th>Target</th>
-                        <th>Severity</th>
-                        <th>Status</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>14:32:15</td>
-                        <td>DDoS Attack</td>
-                        <td>192.168.1.105</td>
-                        <td>Web Server</td>
-                        <td><span class="badge bg-danger">Critical</span></td>
-                        <td><span class="badge bg-success">Blocked</span></td>
-                    </tr>
-                    <tr>
-                        <td>14:28:03</td>
-                        <td>Malware</td>
-                        <td>10.0.0.45</td>
-                        <td>Database</td>
-                        <td><span class="badge bg-warning">High</span></td>
-                        <td><span class="badge bg-warning">Investigating</span></td>
-                    </tr>
-                    <tr>
-                        <td>14:15:47</td>
-                        <td>Phishing</td>
-                        <td>172.16.1.89</td>
-                        <td>Mail Server</td>
-                        <td><span class="badge bg-info">Medium</span></td>
-                        <td><span class="badge bg-primary">Detected</span></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- Success Message -->
-    <div class="row mt-3">
-        <div class="col-12">
-            <div class="alert alert-success">
-                <i class="fas fa-check-circle me-2"></i>
-                Successfully logged in! Your dashboard is now working.
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover">
+                        <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Type</th>
+                            <th>Source IP</th>
+                            <th>Target</th>
+                            <th>Severity</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <tbody id="threatsTableBody">
+                        <tr class="loading">
+                            <td colspan="6">Loading threats...</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Bootstrap JS -->
+<script>
+    // BACKEND URL - CHANGE THIS TO YOUR RENDER URL
+    const BACKEND_URL = 'https://cyber-dashboard-jwz2.onrender.com';
+
+    // Function to load threats from backend
+    async function loadThreats() {
+        try {
+            const response = await fetch(`${BACKEND_URL}/api/threats`);
+            const threats = await response.json();
+
+            // Update table
+            const tableBody = document.getElementById('threatsTableBody');
+            if (threats.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6" class="text-center">No threats found</td></tr>';
+            } else {
+                tableBody.innerHTML = threats.map(threat => `
+                    <tr>
+                        <td>${new Date(threat.timestamp).toLocaleTimeString()}</td>
+                        <td><i class="fas ${getIconForType(threat.type)} me-2"></i>${threat.type}</td>
+                        <td>${threat.sourceIp}</td>
+                        <td>${threat.targetSystem || 'Unknown'}</td>
+                        <td><span class="severity-badge ${getSeverityClass(threat.severity)}">${threat.severity}</span></td>
+                        <td><span class="badge ${getStatusClass(threat.status)}">${threat.status}</span></td>
+                    </tr>
+                `).join('');
+            }
+
+            // Update stats
+            updateStats(threats);
+
+        } catch (error) {
+            console.error('Error loading threats:', error);
+            document.getElementById('threatsTableBody').innerHTML =
+                '<tr><td colspan="6" class="text-danger text-center">Error loading data. Make sure backend is running!</td></tr>';
+        }
+    }
+
+    // Update statistics cards
+    function updateStats(threats) {
+        const totalThreats = threats.length;
+        const activeThreats = threats.filter(t => t.status === 'Detected' || t.status === 'Investigating').length;
+        const blockedThreats = threats.filter(t => t.status === 'Blocked').length;
+        const criticalThreats = threats.filter(t => t.severity === 'Critical').length;
+
+        document.getElementById('totalThreats').textContent = totalThreats;
+        document.getElementById('activeThreats').textContent = activeThreats;
+        document.getElementById('blockedThreats').textContent = blockedThreats;
+    }
+
+    // Helper functions for styling
+    function getSeverityClass(severity) {
+        switch(severity) {
+            case 'Critical': return 'badge-critical';
+            case 'High': return 'badge-high';
+            case 'Medium': return 'badge-medium';
+            default: return 'badge-low';
+        }
+    }
+
+    function getStatusClass(status) {
+        switch(status) {
+            case 'Blocked': return 'bg-success';
+            case 'Investigating': return 'bg-warning text-dark';
+            default: return 'bg-primary';
+        }
+    }
+
+    function getIconForType(type) {
+        switch(type) {
+            case 'DDoS': return 'fa-hurricane';
+            case 'Malware': return 'fa-bug';
+            case 'Phishing': return 'fa-envelope';
+            case 'Brute Force': return 'fa-key';
+            default: return 'fa-shield';
+        }
+    }
+
+    function logout() {
+        window.location.href = `${BACKEND_URL}/logout`;
+    }
+
+    // Load data when page loads
+    loadThreats();
+
+    // Refresh every 10 seconds
+    setInterval(loadThreats, 10000);
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
