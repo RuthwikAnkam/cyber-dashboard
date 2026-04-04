@@ -14,23 +14,21 @@ public class DashboardController {
     @Autowired
     private ThreatService threatService;
 
+    @GetMapping("/")
+    public String home(Model model) {
+        return dashboard(model);
+    }
+
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
-
-        // Fetch REAL data from database via ThreatService
         List<Threat> threats = threatService.getAllThreats();
-        long totalThreats = threatService.getTotalThreats();
-        long activeThreats = threatService.getActiveThreats();
-        long criticalThreats = threatService.getCriticalThreats();
 
-        // Add REAL data to model
         model.addAttribute("username", "Security Analyst");
-        model.addAttribute("totalThreats", totalThreats);
-        model.addAttribute("activeThreats", activeThreats);
-        model.addAttribute("blockedThreats", 8); // We'll fix this later
-        model.addAttribute("criticalThreats", criticalThreats);
+        model.addAttribute("totalThreats", threatService.getTotalThreats());
+        model.addAttribute("activeThreats", threatService.getActiveThreats());
+        model.addAttribute("criticalThreats", threatService.getCriticalThreats());
         model.addAttribute("systemsOnline", 12);
-        model.addAttribute("recentThreats", threats); // REAL threats from database
+        model.addAttribute("recentThreats", threats);
 
         return "dashboard";
     }
