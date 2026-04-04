@@ -6,17 +6,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class LoginController {
 
-    // This handles requests to /login
     @GetMapping("/login")
     public String login() {
-        // This returns the login.html page from templates folder
         return "login";
     }
 
-    // This handles requests to the root URL
+    @GetMapping("/dashboard")
+    public String dashboard() {
+        return "dashboard";
+    }
+
     @GetMapping("/")
-    public String root() {
-        // Redirect root URL to login page
+    public String home() {
         return "redirect:/login";
     }
 }
