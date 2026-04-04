@@ -1,15 +1,10 @@
 {
   "version": 2,
-  "builds": [
+  "public": true,
+  "rewrites": [
     {
-      "src": "src/main/resources/templates/**/*.html",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/src/main/resources/templates/$1"
+      "source": "/(.*)",
+      "destination": "/src/main/resources/templates/login.html"
     }
   ]
 }
