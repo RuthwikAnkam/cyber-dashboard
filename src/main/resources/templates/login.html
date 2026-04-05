@@ -26,7 +26,7 @@
             overflow: hidden;
         }
         .login-header {
-            background: linear-gradient(45deg, #8b0000, #dc3545);
+            background: linear-gradient(45deg, #6b0000, #8b1a1a);
             padding: 25px;
             text-align: center;
         }
@@ -34,11 +34,12 @@
             color: white;
             margin: 0;
             font-weight: 600;
+            font-size: 1.5rem;
         }
         .login-header p {
             color: rgba(255,255,255,0.8);
-            margin: 5px 0 0;
-            font-size: 14px;
+            margin: 8px 0 0;
+            font-size: 13px;
         }
         .login-body {
             padding: 30px;
@@ -52,12 +53,12 @@
         }
         .form-control:focus {
             background: #0a0c0f;
-            border-color: #dc3545;
+            border-color: #8b1a1a;
             color: white;
             box-shadow: none;
         }
         .btn-login {
-            background: linear-gradient(45deg, #8b0000, #dc3545);
+            background: linear-gradient(45deg, #6b0000, #8b1a1a);
             border: none;
             height: 45px;
             font-weight: 600;
@@ -66,8 +67,7 @@
             color: white;
         }
         .btn-login:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 5px 15px rgba(220,53,69,0.3);
+            background: linear-gradient(45deg, #7a0000, #9b2a2a);
         }
         .credentials-box {
             background: #0a0c0f;
@@ -78,7 +78,7 @@
         }
         .credentials-box p {
             margin-bottom: 5px;
-            font-size: 13px;
+            font-size: 12px;
             color: #aaa;
         }
         .credentials-box code {
@@ -86,10 +86,23 @@
             color: #dc3545;
             padding: 2px 6px;
             border-radius: 4px;
+            font-size: 11px;
+        }
+        .credentials-box .badge-admin {
+            background: #dc3545;
+            font-size: 10px;
+            padding: 3px 8px;
+        }
+        .credentials-box .badge-analyst {
+            background: #0dcaf0;
+            color: #000;
+            font-size: 10px;
+            padding: 3px 8px;
         }
         .alert {
             border-radius: 8px;
             margin-bottom: 20px;
+            font-size: 13px;
         }
     </style>
 </head>
@@ -111,7 +124,7 @@
             <form method="post" action="/login">
                 <div class="mb-3">
                     <label class="form-label">Username</label>
-                    <input type="text" name="username" class="form-control" placeholder="Enter username" required>
+                    <input type="text" name="username" class="form-control" placeholder="admin" required>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Password</label>
@@ -124,8 +137,8 @@
 
             <div class="credentials-box">
                 <p><strong><i class="fas fa-key me-1"></i>Test Credentials:</strong></p>
-                <p><span class="badge bg-danger me-2">Admin</span> Username: <code>admin</code> | Password: <code>admin123</code></p>
-                <p><span class="badge bg-info me-2">Analyst</span> Username: <code>analyst</code> | Password: <code>analyst123</code></p>
+                <p><span class="badge-admin me-2">Admin</span> Username: <code>admin</code> | Password: <code>admin123</code></p>
+                <p><span class="badge-analyst me-2">Analyst</span> Username: <code>analyst</code> | Password: <code>analyst123</code></p>
             </div>
         </div>
     </div>
