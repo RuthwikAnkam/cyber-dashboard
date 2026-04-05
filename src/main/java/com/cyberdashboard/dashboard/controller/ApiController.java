@@ -3,8 +3,10 @@ package com.cyberdashboard.dashboard.controller;
 import com.cyberdashboard.dashboard.model.Threat;
 import com.cyberdashboard.dashboard.service.ThreatService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api")
@@ -18,14 +20,9 @@ public class ApiController {
         return threatService.getAllThreats();
     }
 
-    @GetMapping("/threats/recent")
-    public List<Threat> getRecentThreats() {
-        return threatService.getRecentThreats();
-    }
-
     @GetMapping("/stats")
-    public java.util.Map<String, Object> getStats() {
-        java.util.Map<String, Object> stats = new java.util.HashMap<>();
+    public Map<String, Object> getStats() {
+        Map<String, Object> stats = new HashMap<>();
         stats.put("totalThreats", threatService.getTotalThreats());
         stats.put("activeThreats", threatService.getActiveThreats());
         stats.put("criticalThreats", threatService.getCriticalThreats());

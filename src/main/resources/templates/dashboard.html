@@ -11,7 +11,6 @@
         <a href="/logout" class="btn btn-light btn-sm">Logout</a>
     </div>
 </nav>
-
 <div class="container mt-4">
     <div class="row">
         <div class="col-md-3">
@@ -21,20 +20,31 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card bg-warning p-3">
+            <div class="card bg-warning text-dark p-3">
                 <h6>Active Threats</h6>
                 <h2 id="active">0</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success p-3">
+                <h6>Critical Threats</h6>
+                <h2 id="critical">0</h2>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-dark p-3">
+                <h6>Systems Online</h6>
+                <h2 id="online">12</h2>
             </div>
         </div>
     </div>
 
     <table class="table table-dark mt-4">
         <thead>
-        <tr><th>Type</th><th>Severity</th><th>Source IP</th><th>Status</th></tr>
+        <tr><th>Type</th><th>Severity</th><th>Source IP</th><th>Target</th><th>Status</th></tr>
         </thead>
         <tbody id="tableBody">
-        <tr><td colspan="4">Loading...</td></tr>
-        </tbody>
+        <tr><td colspan="5" class="text-center">Loading...</tr</tr</tbody>
     </table>
 </div>
 
@@ -43,15 +53,20 @@
         .then(res => res.json())
         .then(data => {
             document.getElementById('total').innerText = data.length;
-            document.getElementById('active').innerText = data.filter(t => t.status !== 'Blocked').length;
+            document.getElementById('active').innerText = data.filter(t => t.status === 'Detected' || t.status === 'Investigating').length;
+            document.getElementById('critical').innerText = data.filter(t => t.severity === 'Critical').length;
             document.getElementById('tableBody').innerHTML = data.map(t => `
                 <tr>
                     <td>${t.type}</td>
-                    <td>${t.severity}</td>
+                    <td><span class="badge ${t.severity === 'Critical' ? 'bg-danger' : t.severity === 'High' ? 'bg-warning' : 'bg-info'}">${t.severity}</span></td>
                     <td>${t.sourceIp}</td>
-                    <td>${t.status}</td>
+                    <td>${t.targetSystem || 'N/A'}</td>
+                    <td><span class="badge ${t.status === 'Blocked' ? 'bg-success' : 'bg-warning'}">${t.status}</span></td>
                 </tr>
             `).join('');
+        })
+        .catch(err => {
+            document.getElementById('tableBody').innerHTML = '<tr><td colspan="5" class="text-danger">Error loading data</td></tr>';
         });
 </script>
 </body>

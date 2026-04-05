@@ -14,13 +14,8 @@ public class DashboardController {
     @Autowired
     private ThreatService threatService;
 
-    @GetMapping("/")
-    public String home(Model model) {
-        return dashboard(model);
-    }
-
     @GetMapping("/dashboard")
-    public String dashboard(Model model) {
+    public String showDashboard(Model model) {
         List<Threat> threats = threatService.getAllThreats();
 
         model.addAttribute("username", "Security Analyst");
