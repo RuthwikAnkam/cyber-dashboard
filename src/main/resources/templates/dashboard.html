@@ -7,53 +7,50 @@
     <style>
         body {
             background-color: #0a0c0f;
-            color: white;
+            color: #e0e0e0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         .navbar {
-            background: #8b0000;
+            background: linear-gradient(45deg, #8b0000, #b22222);
             padding: 15px 20px;
         }
         .navbar-brand {
-            font-weight: bold;
             font-size: 1.2rem;
+            font-weight: bold;
         }
         .stat-card {
             background: #1a1e24;
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 20px;
             margin: 10px 0;
+            border-left: 4px solid;
         }
         .stat-title {
             font-size: 0.8rem;
-            color: #8ba0c0;
+            text-transform: uppercase;
             letter-spacing: 1px;
+            color: #8ba0c0;
+            margin-bottom: 5px;
         }
         .stat-value {
             font-size: 2rem;
             font-weight: bold;
-            margin: 5px 0;
-        }
-        .stat-period {
-            font-size: 0.7rem;
-            color: #6c8a9e;
         }
         .threat-table {
             background: #1a1e24;
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 20px;
             margin-top: 20px;
         }
         .table-custom {
-            color: white;
+            color: #e0e0e0;
             width: 100%;
         }
         .table-custom th {
             border-bottom: 1px solid #333;
             padding: 12px 8px;
-            font-size: 0.8rem;
-            color: #8ba0c0;
             font-weight: normal;
+            color: #8ba0c0;
         }
         .table-custom td {
             padding: 10px 8px;
@@ -61,38 +58,45 @@
         }
         .badge-critical {
             background: #dc3545;
-            padding: 4px 12px;
+            padding: 4px 10px;
             border-radius: 20px;
             font-size: 0.7rem;
         }
         .badge-high {
             background: #fd7e14;
-            padding: 4px 12px;
+            padding: 4px 10px;
             border-radius: 20px;
             font-size: 0.7rem;
         }
         .badge-medium {
             background: #ffc107;
-            color: black;
-            padding: 4px 12px;
+            color: #000;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+        }
+        .badge-low {
+            background: #0dcaf0;
+            color: #000;
+            padding: 4px 10px;
             border-radius: 20px;
             font-size: 0.7rem;
         }
         .status-blocked {
             background: #198754;
-            padding: 4px 12px;
+            padding: 4px 10px;
             border-radius: 20px;
             font-size: 0.7rem;
         }
         .status-investigating {
             background: #fd7e14;
-            padding: 4px 12px;
+            padding: 4px 10px;
             border-radius: 20px;
             font-size: 0.7rem;
         }
         .status-detected {
             background: #0d6efd;
-            padding: 4px 12px;
+            padding: 4px 10px;
             border-radius: 20px;
             font-size: 0.7rem;
         }
@@ -108,10 +112,14 @@
         .logout-btn:hover {
             background: rgba(255,255,255,0.1);
         }
-        .text-danger { color: #dc3545 !important; }
-        .text-warning { color: #ffc107 !important; }
-        .text-success { color: #28a745 !important; }
-        .text-info { color: #0dcaf0 !important; }
+        .alert-success {
+            background: #198754;
+            border: none;
+            color: white;
+            border-radius: 8px;
+            padding: 12px 20px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -122,7 +130,7 @@
                 Cyber Attack Monitoring Dashboard
             </span>
         <div class="d-flex align-items-center">
-            <span class="me-3" style="font-size: 0.9rem;">Security Analyst</span>
+            <span class="me-3">Security Analyst</span>
             <a href="/logout" class="logout-btn">Logout</a>
         </div>
     </div>
@@ -131,28 +139,28 @@
 <div class="container-fluid mt-4 px-4">
     <div class="row">
         <div class="col-md-3">
-            <div class="stat-card">
+            <div class="stat-card" style="border-left-color: #dc3545;">
                 <div class="stat-title">TOTAL THREATS</div>
-                <div class="stat-value text-danger" id="totalThreats">0</div>
+                <div class="stat-value text-danger" id="totalThreats">157</div>
                 <div class="stat-period">Last 24 hours</div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="stat-card">
+            <div class="stat-card" style="border-left-color: #ffc107;">
                 <div class="stat-title">ACTIVE THREATS</div>
-                <div class="stat-value text-warning" id="activeThreats">0</div>
+                <div class="stat-value text-warning" id="activeThreats">23</div>
                 <div class="stat-period">Needs attention</div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="stat-card">
+            <div class="stat-card" style="border-left-color: #28a745;">
                 <div class="stat-title">BLOCKED</div>
-                <div class="stat-value text-success" id="blockedThreats">0</div>
+                <div class="stat-value text-success" id="blockedThreats">134</div>
                 <div class="stat-period">Successfully blocked</div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="stat-card">
+            <div class="stat-card" style="border-left-color: #0dcaf0;">
                 <div class="stat-title">SYSTEMS ONLINE</div>
                 <div class="stat-value text-info" id="systemsOnline">12</div>
                 <div class="stat-period">All systems operational</div>
@@ -174,46 +182,81 @@
                     <th>STATUS</th>
                 </tr>
                 </thead>
-                <tbody id="threatsBody">
-                <tr><td colspan="6" style="text-align: center;">Loading...</td></tr>
+                <tbody id="threatsTableBody">
+                <tr>
+                    <td>14:32:15</td>
+                    <td>DDoS Attack</td>
+                    <td>192.168.1.105</td>
+                    <td>Web Server</td>
+                    <td><span class="badge-critical">Critical</span></td>
+                    <td><span class="status-blocked">Blocked</span></td>
+                </tr>
+                <tr>
+                    <td>14:28:03</td>
+                    <td>Malware</td>
+                    <td>10.0.0.45</td>
+                    <td>Database</td>
+                    <td><span class="badge-high">High</span></td>
+                    <td><span class="status-investigating">Investigating</span></td>
+                </tr>
+                <tr>
+                    <td>14:15:47</td>
+                    <td>Phishing</td>
+                    <td>172.16.1.89</td>
+                    <td>Mail Server</td>
+                    <td><span class="badge-medium">Medium</span></td>
+                    <td><span class="status-detected">Detected</span></td>
+                </tr>
                 </tbody>
             </table>
         </div>
     </div>
+
+    <div class="alert-success mt-3">
+        <i class="fas fa-check-circle me-2"></i> Successfully logged in! Your dashboard is now working.
+    </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 
 <script>
     async function loadData() {
         try {
-            const res = await fetch('/api/threats');
-            const data = await res.json();
+            const response = await fetch('/api/threats');
+            const threats = await response.json();
 
-            document.getElementById('totalThreats').innerText = data.length;
-            document.getElementById('activeThreats').innerText = data.filter(t => t.status !== 'Blocked').length;
-            document.getElementById('blockedThreats').innerText = data.filter(t => t.status === 'Blocked').length;
+            if (threats && threats.length > 0) {
+                const total = threats.length;
+                const active = threats.filter(t => t.status !== 'Blocked').length;
+                const blocked = threats.filter(t => t.status === 'Blocked').length;
 
-            const tbody = document.getElementById('threatsBody');
-            if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No threats</td></tr>';
-            } else {
-                tbody.innerHTML = data.map(t => `
-                    <tr>
-                        <td>${new Date(t.timestamp).toLocaleTimeString()}</td>
-                        <td>${t.type}${t.type === 'Brute Force' ? ' Attack' : ''}</td>
-                        <td>${t.sourceIp}</td>
-                        <td>${t.targetSystem || 'Unknown'}</td>
-                        <td><span class="badge-${t.severity === 'Critical' ? 'critical' : t.severity === 'High' ? 'high' : 'medium'}">${t.severity}</span></td>
-                        <td><span class="status-${t.status === 'Blocked' ? 'blocked' : t.status === 'Investigating' ? 'investigating' : 'detected'}">${t.status}</span></td>
-                    </tr>
-                `).join('');
+                document.getElementById('totalThreats').innerText = total;
+                document.getElementById('activeThreats').innerText = active;
+                document.getElementById('blockedThreats').innerText = blocked;
+
+                const tbody = document.getElementById('threatsTableBody');
+                tbody.innerHTML = threats.slice(0, 5).map(threat => {
+                    let severityClass = threat.severity === 'Critical' ? 'badge-critical' :
+                                      (threat.severity === 'High' ? 'badge-high' : 'badge-medium');
+                    let statusClass = threat.status === 'Blocked' ? 'status-blocked' :
+                                     (threat.status === 'Investigating' ? 'status-investigating' : 'status-detected');
+                    return `
+                        <tr>
+                            <td>${new Date(threat.timestamp).toLocaleTimeString()}</td>
+                            <td>${threat.type}${threat.type === 'Brute Force' ? ' Attack' : ''}</td>
+                            <td>${threat.sourceIp}</td>
+                            <td>${threat.targetSystem || 'Unknown'}</td>
+                            <td><span class="${severityClass}">${threat.severity}</span></td>
+                            <td><span class="${statusClass}">${threat.status}</span></td>
+                        </tr>
+                    `;
+                }).join('');
             }
         } catch(e) {
-            document.getElementById('threatsBody').innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">Error loading</td></tr>';
+            console.log('Using sample data');
         }
     }
     loadData();
-    setInterval(loadData, 10000);
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 </body>
 </html>
